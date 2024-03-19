@@ -14,39 +14,40 @@ def main():
   menu_with_redirect()
   today = datetime.now().date()
 
-  if "count" not in st.session_state:
+  if 'count' not in st.session_state:
     st.session_state.count = 1
-
-  if "messages" not in st.session_state:
+  if 'messages' not in st.session_state:
     st.session_state.messages = [{'generation_id': st.session_state.count, 'role': 'assistant', 'content': '오늘 하루는 어떠셨나요?'}]
 
   st.title(f'{datetime.now().year}년 {datetime.now().month}월 {datetime.now().day}일 오늘의 일기')
   st.divider()
-   
+
+
   if st.session_state.today_data.empty:
     prompt = st.chat_input()
   else:
     prompt = st.chat_input(disabled=True)
     st.session_state.messages = json.loads(st.session_state.today_data.content.values[0])
     st.session_state['count'] = st.session_state.messages[-1]['generation_id']
-
+    
   for message in st.session_state.messages:
     with st.chat_message(message['role']):
-        st.markdown(message["content"])
+        st.markdown(message["content"])     
+   
   if prompt:
-    st.session_state.count += 1
-    st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
-    st.chat_message("user").markdown(prompt)
-
     data = {
       "generation_id" : st.session_state.count, # generation task id
       "query" : prompt, # 주어진 질문
       "history" : st.session_state.messages
     }
+    st.session_state.count += 1
+    st.chat_message("user").markdown(prompt)    
+    st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
 
     with st.chat_message("assistant"):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
+        
       st.session_state.count += 1
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
@@ -83,7 +84,7 @@ def main():
                                                           word]],
                                                     columns=st.session_state['my_data'].columns.to_list())
       st.switch_page('pages/summary.py')
-          
+    
           
 if __name__ == '__main__':
   diary = sqlite3.connect('diary.db')
