@@ -67,11 +67,14 @@ def login():
       st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
 
   if signin:
+    create_usertable()
+    if not password:
+        st.sidebar.error('비밀번호를 입력해주세요')
+        return
     result = join_user(username)
     if result:
       st.sidebar.error('이미 존재하는 아이디입니다.')
     else:
-      create_usertable()
       add_userdata(username,make_hashes(password))
       user_db.commit()
       st.sidebar.success(f'가입을 환영합니다 {username}님')
@@ -79,6 +82,7 @@ def login():
       st.session_state['id'] = username
       create_diarytable()
       st.session_state['my_data'] = load_user_data(username)
+      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       time.sleep(2)
       st.switch_page('pages/diary.py')
 
@@ -87,17 +91,10 @@ def what_is_ed():
   st.write('하루의 일상을 마무리하면서 Dr.부덕이와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스')
 
 def main():
-  if "is_login" not in st.session_state:
-    st.session_state['is_login'] = False
-
-  if "my_data" not in st.session_state:
-    st.session_state['my_data'] = None
-
-  if "id" not in st.session_state:
-    st.session_state['id'] = None
-
-  if "today_data" not in st.session_state:
-    st.session_state['today_data'] = None
+  st.session_state['is_login'] = False
+  st.session_state['my_data'] = ''
+  st.session_state['id'] = ''
+  st.session_state['today_data'] = pd.DataFrame()
 
   menu()
   login()
