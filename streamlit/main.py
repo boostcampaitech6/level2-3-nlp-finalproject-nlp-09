@@ -1,6 +1,7 @@
 import hashlib
 import time
 import pandas as pd
+from datetime import datetime
 
 import streamlit as st
 import sqlite3
@@ -61,6 +62,7 @@ def login():
       st.session_state['is_login'] = True
       st.session_state['id'] = username
       st.session_state['my_data'] = load_user_data(username)
+      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       st.switch_page('pages/diary.py')
     else:
       st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
@@ -95,6 +97,9 @@ def main():
   if "id" not in st.session_state:
     st.session_state['id'] = None
 
+  if "today_data" not in st.session_state:
+    st.session_state['today_data'] = None
+
   menu()
   login()
   what_is_ed()
@@ -104,4 +109,5 @@ if __name__ == '__main__':
   diary = sqlite3.connect('diary.db')
   c = user_db.cursor()
   diary_c = diary.cursor()
+  today = datetime.now().date()
   main()
