@@ -5,7 +5,6 @@ from datetime import datetime
 
 import streamlit as st
 import sqlite3
-from openai import OpenAI
 
 from menu import menu
 
