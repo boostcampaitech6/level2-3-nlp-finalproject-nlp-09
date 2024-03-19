@@ -59,6 +59,7 @@ def login():
     if result:
       st.success("Logged In as {}".format(username))
       st.session_state['is_login'] = True
+      st.session_state['id'] = username
       st.session_state['my_data'] = load_user_data(username)
       st.switch_page('pages/diary.py')
     else:
@@ -74,6 +75,7 @@ def login():
       user_db.commit()
       st.sidebar.success(f'가입을 환영합니다 {username}님')
       st.session_state['is_login'] = True
+      st.session_state['id'] = username
       create_diarytable()
       st.session_state['my_data'] = load_user_data(username)
       time.sleep(2)
@@ -89,6 +91,9 @@ def main():
 
   if "my_data" not in st.session_state:
     st.session_state['my_data'] = None
+
+  if "id" not in st.session_state:
+    st.session_state['id'] = None
 
   menu()
   login()
