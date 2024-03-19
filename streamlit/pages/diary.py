@@ -22,11 +22,7 @@ def main():
 
   st.title(f'{datetime.now().year}년 {datetime.now().month}월 {datetime.now().day}일 오늘의 일기')
   st.divider()
-
-  for message in st.session_state.messages:
-    with st.chat_message(message['role']):
-        st.markdown(message["content"])
-        
+   
   if st.session_state.today_data.empty:
     prompt = st.chat_input()
   else:
@@ -34,6 +30,9 @@ def main():
     st.session_state.messages = json.loads(st.session_state.today_data.content.values[0])
     st.session_state['count'] = st.session_state.messages[-1]['generation_id']
 
+  for message in st.session_state.messages:
+    with st.chat_message(message['role']):
+        st.markdown(message["content"])
   if prompt:
     st.session_state.count += 1
     st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
