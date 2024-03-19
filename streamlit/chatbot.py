@@ -3,8 +3,7 @@ import json
 
 import streamlit as st
 
-def call_api(data:dict):
-    url = st.secrets['api_url']  # FastAPI 서버의 엔드포인트 URL
+def call_api(url, data:dict):
     response = requests.post(url, data=json.dumps(data))  # GET 요청을 보냄
 
     if response.status_code == 200:  # 요청이 성공했을 때
