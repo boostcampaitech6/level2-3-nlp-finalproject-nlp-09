@@ -80,8 +80,8 @@ def login():
       st.switch_page('pages/diary.py')
 
 def what_is_ed():
-  st.title('감정일기')
-  st.write('감정일기는 감정이 어쩌구저쩌구 일기가 어쩌구저쩌구 챗봇이 어쩌구저쩌구')
+  st.title('A BoostCamp Diary for Emotions')
+  st.write('하루의 일상을 마무리하면서 Dr.부덕이와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스')
 
 def main():
   if "is_login" not in st.session_state:
