@@ -5,7 +5,7 @@ from collections import Counter
 
 import streamlit as st
 import matplotlib.pyplot as plt
-from matplotlib import font_manager, rc
+import koreanize_matplotlib
 
 from menu import menu_with_redirect
 from chatbot import *
@@ -31,7 +31,6 @@ def main():
       emotion_title = [data[0] for data in emotion.values()]
       emotion_value = [data[1] for data in emotion.values()]
       fig, ax = plt.subplots()
-      cmap = plt.get_cmap('Set2')
       ax.pie(emotion_value, labels=emotion_title, autopct='%1.1f%%')
       st.pyplot(fig)
       
