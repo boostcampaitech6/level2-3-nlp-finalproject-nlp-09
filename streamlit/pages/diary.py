@@ -38,6 +38,7 @@ def main():
           st.markdown(message["content"])
    
   if prompt:
+    st.chat_message("user", avatar=Image.open('images/human.png')).markdown(prompt)    
     data = {
       "generation_id" : st.session_state.count, # generation task id
       "query" : prompt, # 주어진 질문
@@ -45,8 +46,7 @@ def main():
     }
     st.session_state.count += 1
     st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
-    st.chat_message("user", avatar=Image.open('images/human.png')).markdown(prompt)    
-    
+
     with st.chat_message("assistant", avatar=Image.open('images/buduck.png')):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
@@ -81,7 +81,7 @@ def main():
       c.execute('INSERT INTO diarytable(diary_id, id, date, content, summary, emotion, word) VALUES (?,?,?,?,?,?,?)',(f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                                                                                       st.session_state['id'],
                                                                                                                       today,
-                                                                                                                      str(st.session_state['messages']).replace("'generation_id'", '"generateion_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
+                                                                                                                      str(st.session_state['messages']).replace("'generation_id'", '"generation_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                                                                                       summary,
                                                                                                                       emotion,
                                                                                                                       word))
@@ -89,7 +89,7 @@ def main():
       st.session_state['today_data'] = pd.DataFrame(data=[[f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                           st.session_state['id'],
                                                           today,
-                                                          str(st.session_state['messages']).replace("'generation_id'", '"generateion_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
+                                                          str(st.session_state['messages']).replace("'generation_id'", '"generation_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                           summary,
                                                           emotion,
                                                           word]],
