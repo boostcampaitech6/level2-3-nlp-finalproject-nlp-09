@@ -44,6 +44,9 @@ def load_user_data(username):
   return data
 
 def login():
+  for key in st.session_state.keys():
+    del st.session_state[key]
+    
   sidebar_title = st.sidebar.header('로그인')
   username = st.sidebar.text_input("ID")
   password = st.sidebar.text_input("Password",type='password')
