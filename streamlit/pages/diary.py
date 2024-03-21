@@ -4,6 +4,7 @@ import streamlit as st
 import json
 import sqlite3
 import pandas as pd
+from PIL import Image
 
 from menu import menu_with_redirect
 from chatbot import *
@@ -29,8 +30,12 @@ def main():
     st.session_state['count'] = st.session_state.messages[-1]['generation_id']
     
   for message in st.session_state.messages:
-    with st.chat_message(message['role']):
-        st.markdown(message["content"])     
+    if message['role'] == 'user':
+      with st.chat_message(message['role'], avatar=Image.open('/images/human.png')):
+          st.markdown(message["content"])
+    else:
+      with st.chat_message(message['role'], avatar=Image.open('/images/buduck.png')):
+          st.markdown(message["content"])
    
   if prompt:
     data = {
@@ -39,9 +44,9 @@ def main():
       "history" : st.session_state.messages
     }
     st.session_state.count += 1
-    st.chat_message("user").markdown(prompt)    
+    st.chat_message("user", avatar=Image.open('/images/human.png')).markdown(prompt)    
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar=Image.open('/images/buduck.png')):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
       st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
