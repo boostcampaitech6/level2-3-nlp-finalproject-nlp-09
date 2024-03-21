@@ -8,8 +8,6 @@ import pandas as pd
 from menu import menu_with_redirect
 from chatbot import *
 
-
-
 def main():
   menu_with_redirect()
   today = datetime.now().date()
@@ -17,7 +15,7 @@ def main():
   if 'count' not in st.session_state:
     st.session_state.count = 1
   if 'messages' not in st.session_state:
-    st.session_state.messages = [{'generation_id': st.session_state.count, 'role': 'assistant', 'content': '오늘 하루는 어떠셨나요?'}]
+    st.session_state.messages = [{'generation_id': st.session_state.count, 'role': 'assistant', 'content': '오늘 하루는 어땠어?'}]
 
   st.title(f'{datetime.now().year}년 {datetime.now().month}월 {datetime.now().day}일 오늘의 일기')
   st.divider()
@@ -42,12 +40,11 @@ def main():
     }
     st.session_state.count += 1
     st.chat_message("user").markdown(prompt)    
-    st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
 
     with st.chat_message("assistant"):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
-        
+      st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
       st.session_state.count += 1
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
@@ -65,12 +62,20 @@ def main():
             "query" : st.session_state['messages'], # 주어진 질문
           }
           summary = call_api(st.secrets['summary_url'], data)
-      emotion = '{"emotion1":["위축감", 0.78], "emotion2":["억울함",0.11], "emotion3":["시기심",0.01]}' # 추후에 구현
-      word = '["안녕","반갑","행복","안녕","외식","즐겁","안녕","고기","사랑","행복","가족"]' # 추후에 구현
+          data = {
+            "summary": summary
+          }
+          emotion = call_emotion_api(st.secrets['emotion_url'], data)
+          emotion = str(emotion).replace("'", '"')
+          data = {
+            "chat": st.session_state.messages
+          }
+          word = call_word_api(st.secrets['word_url'], data)
+          word = str(word ).replace("'", '"')
       c.execute('INSERT INTO diarytable(diary_id, id, date, content, summary, emotion, word) VALUES (?,?,?,?,?,?,?)',(f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                                                                                       st.session_state['id'],
                                                                                                                       today,
-                                                                                                                      str(st.session_state['messages']).replace("'", '"'),
+                                                                                                                      str(st.session_state['messages']).replace("'generation_id'", '"generateion_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                                                                                       summary,
                                                                                                                       emotion,
                                                                                                                       word))
@@ -78,7 +83,7 @@ def main():
       st.session_state['today_data'] = pd.DataFrame(data=[[f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                           st.session_state['id'],
                                                           today,
-                                                          str(st.session_state['messages']).replace("'", '"'),
+                                                          str(st.session_state['messages']).replace("'generation_id'", '"generateion_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                           summary,
                                                           emotion,
                                                           word]],
