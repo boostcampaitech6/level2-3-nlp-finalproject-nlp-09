@@ -44,9 +44,7 @@ def load_user_data(username):
   return data
 
 def login():
-  for key in st.session_state.keys():
-    del st.session_state[key]
-    
+
   sidebar_title = st.sidebar.header('로그인')
   username = st.sidebar.text_input("ID")
   password = st.sidebar.text_input("Password",type='password')
@@ -60,7 +58,6 @@ def login():
     result = login_user(username,check_hashes(password,hashed_pswd))
 
     if result:
-      st.success("Logged In as {}".format(username))
       st.session_state['is_login'] = True
       st.session_state['id'] = username
       st.session_state['my_data'] = load_user_data(username)
@@ -94,6 +91,9 @@ def what_is_ed():
   st.write('하루의 일상을 마무리하면서 Dr.부덕이와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스')
 
 def main():
+  for key in st.session_state.keys():
+    del st.session_state[key]
+    
   st.session_state['is_login'] = False
   st.session_state['my_data'] = ''
   st.session_state['id'] = ''
