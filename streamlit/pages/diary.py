@@ -31,10 +31,10 @@ def main():
     
   for message in st.session_state.messages:
     if message['role'] == 'user':
-      with st.chat_message(message['role'], avatar=Image.open('/images/human.png')):
+      with st.chat_message(message['role'], avatar=Image.open('images/human.png')):
           st.markdown(message["content"])
     else:
-      with st.chat_message(message['role'], avatar=Image.open('/images/buduck.png')):
+      with st.chat_message(message['role'], avatar=Image.open('images/buduck.png')):
           st.markdown(message["content"])
    
   if prompt:
@@ -44,12 +44,13 @@ def main():
       "history" : st.session_state.messages
     }
     st.session_state.count += 1
-    st.chat_message("user", avatar=Image.open('/images/human.png')).markdown(prompt)    
-
-    with st.chat_message("assistant", avatar=Image.open('/images/buduck.png')):
+    st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
+    st.chat_message("user", avatar=Image.open('images/human.png')).markdown(prompt)    
+    
+    with st.chat_message("assistant", avatar=Image.open('images/buduck.png')):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
-      st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
+      
       st.session_state.count += 1
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
