@@ -45,12 +45,12 @@ def main():
       "history" : st.session_state.messages
     }
     st.session_state.count += 1
-    st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
 
     with st.chat_message("assistant", avatar=Image.open('images/buduck.png')):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
-      
+        
+      st.session_state.messages.append({'generation_id': st.session_state.count, 'role': 'user', 'content': prompt})
       st.session_state.count += 1
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
