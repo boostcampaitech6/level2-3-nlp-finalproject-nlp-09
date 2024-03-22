@@ -11,16 +11,16 @@ def change_emotion(text):
     text = '즐거움'
   return text
 
-def change_email(text):
-  if text == 'kgy90401@gmail.com':
+def change_email(text): # 라벨러를 식별할 수 있는 정보 마스킹
+  if text == 'User1@gmail.com':
     text = 'A'
-  elif text == 'gusdnr122997@gmail.com':
+  elif text == 'User2@gmail.com':
     text = 'B'
-  elif text == 'dbswn9595@gmail.com':
+  elif text == 'User3@gmail.com':
     text = 'C'
-  elif text == 'fprlehd@gmail.com':
+  elif text == 'User4@gmail.com':
     text = 'D'
-  elif text == 'sykwak1110@gmail.com':
+  elif text == 'User5@gmail.com':
     text = 'E'
   else:
     text = ''
