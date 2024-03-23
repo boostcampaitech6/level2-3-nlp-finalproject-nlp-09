@@ -1,6 +1,6 @@
 import torch
 from transformers import (
-    pipeline, 
+    pipeline, BitsAndBytesConfig,
     AutoTokenizer,
     AutoModelForCausalLM, 
     TextStreamer,
@@ -44,6 +44,11 @@ class ChatPipe:
         self.model = None
         self.tokenizer = None
         
+        if 'polyglot' in self.model_name:
+            self.stop_word = "</끝>"
+        else:
+            self.stop_word = "</s>"
+        
         self.build_pipeline()
         
     def __call__(self, message: str, history: list) -> str:
@@ -66,6 +71,9 @@ class ChatPipe:
     def post_process(self, text: str) -> str:
         text = text.replace(';','')
         text = text.replace(']', "")
+        text = text.replace('user', '친구')
+        text = text.replace('oo','친구')
+        text = text.replace('</끝>', "")
         if '\n' in text:
             text = text.split('\n')[0]
         if '###' in text:
@@ -78,8 +86,17 @@ class ChatPipe:
         Returns:
             pipeline: Text Generation Pipeline
         """
+        compute_dtype = getattr(torch, "float16")
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=compute_dtype,
+            bnb_4bit_use_double_quant=False,
+        )
+        
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
+            quantization_config=bnb_config,
             trust_remote_code=True,
             low_cpu_mem_usage=True,
             device_map="auto",
@@ -103,8 +120,13 @@ class ChatPipe:
     def pipe(self, text:str, max_new_tokens:int=100):
         if self.streamer:
             streamer = TextStreamer(self.tokenizer)
-            
-        stop_words_ids = [torch.LongTensor([35824, 50362, 51429]).to('cuda'), torch.LongTensor([2]).to('cuda'),]
+        
+        if 'Orion' in self.model_name:
+            stop_words_ids = [torch.LongTensor([35824, 50362, 51429]).to('cuda'), torch.LongTensor([2]).to('cuda'),]
+        elif 'polyglot' in self.model_name:
+            stop_words_ids = [torch.LongTensor([31, 18, 5568, 33]).to('cuda'), torch.LongTensor([2]).to('cuda'),]
+        else:
+            stop_words_ids = [torch.LongTensor([2]).to('cuda'),]
         stopping_criteria = StoppingCriteriaList(
             [StoppingCriteriaSub(stops=stop_words_ids)]
         )
@@ -115,14 +137,14 @@ class ChatPipe:
             generate_ids = self.model.generate(
                 inputs.input_ids.cuda(),
                 max_new_tokens=max_new_tokens,
-                temperature=0.9,
-                eos_token_id=2,
-                pad_token_id=2,
-                top_k=40,
-                top_p=0.95,
-                repetition_penalty=1.2,
-                do_sample=True,
-                num_return_sequences=1,
+                # temperature=0.9,
+                # eos_token_id=2,
+                # pad_token_id=2,
+                # top_k=40,
+                # top_p=0.95,
+                repetition_penalty=1.5,
+                # do_sample=True,
+                # num_return_sequences=1,
                 streamer=streamer,
                 stopping_criteria=stopping_criteria,
             )
@@ -134,23 +156,23 @@ class ChatPipe:
     
     def first_chat_prompt(self, message: str) -> str:
         text = f""" 문장이 `평범` 한지 `특별`한지 판단하세요.
-[s_start] 오늘 별일 없었어 [s_end] > 평범 </s>
-[s_start] 오늘 공연 보다 왔어! [s_end] > 특별 </s>
-[s_start] 오늘 그냥 하루종일 집에 있었어 [s_end] > 평범 </s>
-[s_start] 친구들이랑 게임했어 [s_end] > 특별 </s>
-[s_start] 딱히 [s_end] > 평범 </s>
+[s_start] 오늘 별일 없었어 [s_end] > 평범 {self.stop_word}
+[s_start] 오늘 공연 보다 왔어! [s_end] > 특별 {self.stop_word}
+[s_start] 오늘 그냥 하루종일 집에 있었어 [s_end] > 평범 {self.stop_word}
+[s_start] 친구들이랑 게임했어 [s_end] > 특별 {self.stop_word}
+[s_start] 딱히 [s_end] > 평범 {self.stop_word}
 
 [s_start] {message} [s_end] >"""
         return text
     
     def bad_chat_prompt(self, message: str) -> str:
         text = f"""문장에 의미가 있으면 `좋음` 없으면 `나쁨`으로 표시하세요.
-[s_start] 뷁 [s_end] > 나쁨 </s>
-[s_start] 오늘 공연 보다 왔어! [s_end] > 좋음 </s>
-[s_start] ㄲㄴㄷ [s_end] > 나쁨 </s>
-[s_start] 게임함 [s_end] > 좋음 </s>
-[s_start] 앙 기모찌 [s_end] > 나쁨 </s>
-[s_start] 딱히 [s_end] > 좋음 </s>
+[s_start] 뷁 [s_end] > 나쁨 {self.stop_word}
+[s_start] 오늘 공연 보다 왔어! [s_end] > 좋음 {self.stop_word}
+[s_start] ㄲㄴㄷ [s_end] > 나쁨 {self.stop_word}
+[s_start] 게임함 [s_end] > 좋음 {self.stop_word}
+[s_start] 앙 기모찌 [s_end] > 나쁨 {self.stop_word}
+[s_start] 딱히 [s_end] > 좋음 {self.stop_word}
 
 [s_start] {message} [s_end] >"""
         return text
@@ -158,9 +180,9 @@ class ChatPipe:
     def chat_prompt(self, message: str, history: List[Dict[str, str]]) -> str:
         history_text = ""
         for line in history:
-            history_text += f"###{line['role']}: {line['content']}{'</s>' if line['role'] == 'assistant' else ''}\n"
-        text = f"""당신은 user에게 긍정적이고 친근한 답변을 제공하는 chatbot assistant입니다.
-assistant는 사용자의 말을 공감합니다. assistant는 user에게 다시 질문을 합니다. 대화의 흐름에 맞는 답변이 오면 좋습니다. assistant는 반말로 대답해야 좋습니다.
+            history_text += f"###{line['role']}: {line['content']}{self.stop_word if line['role'] == 'assistant' else ''}\n"
+        text = f"""assistant는 user에게 긍정적이고 친근한 답변을 제공하며 공감합니다. assistant는 user에게 다시 질문을 합니다.
+대화의 흐름에 맞는 답변이 오면 좋습니다. assistant는 반말로 대답해야 좋습니다.
 
 {history_text}
 ###user: {message}

@@ -63,8 +63,11 @@ def get_tokenizer(config):
     return tokenizer
 
 
+# orion [35824, 50362, 51429]
+# polyglot [31, 18, 5568, 33]
+
 def generate_reply(model, tokenizer, query):
-    stop_words_ids = [torch.LongTensor([35824, 50362, 51429]).to('cuda'), torch.LongTensor([2]).to('cuda'),]
+    stop_words_ids = [torch.LongTensor([31, 18, 5568, 33]).to('cuda'), torch.LongTensor([2]).to('cuda'),]
     stopping_criteria = StoppingCriteriaList(
         [StoppingCriteriaSub(stops=stop_words_ids)]
     )
@@ -92,11 +95,11 @@ assistant는 사용자의 말을 되풀이합니다. assistant는 user에게 질
 
 if __name__ == "__main__":
     set_env()
-    config = load_config('./config.yaml')
+    config = load_config('./modeling/config.yaml')
     
     model = get_model(config)
     tokenizer = get_tokenizer(config)
     
-    reply = generate_reply(model, tokenizer, "안녕 친구야 지금 뭐해??")
+    reply = generate_reply(model, tokenizer, "오늘 너무 우울하다...ㅠㅠ")
     print("Generated:", reply)
     print("DONE")

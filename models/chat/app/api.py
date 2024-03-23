@@ -7,12 +7,17 @@ from assistant_chats import get_random_first_chat, get_random_second_chat
 
 router = APIRouter()
 
+# pipe = ChatPipe(
+#     "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit", 
+#     '../models/best_adapter_e5', 
+#     streamer=True
+# )
+
 pipe = ChatPipe(
-    "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit", 
-    '../models/best_adapter_e5', 
+    "EleutherAI/polyglot-ko-5.8b", 
+    '/home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/trained/01:18:560324-011856', 
     streamer=True
 )
-
 
 class ChatRequest(BaseModel):
     generation_id: int
@@ -45,6 +50,7 @@ async def generate_text(req: ChatRequest) -> ChatResponse:
     except ValueError:
         raise HTTPException(status_code=400, detail="Input is not valid")
     except Exception as err:
+        print(err)
         raise HTTPException(status_code=500, detail="Something went wrong")
 
     return ChatResponse(

@@ -14,7 +14,7 @@ from transformers import (
 from peft import LoraConfig
 from trl import SFTTrainer
 
-import wandb
+# import wandb
 
 
 def get_dataset(config):
@@ -110,7 +110,7 @@ def get_trainer(model, tokenizer, dataset, peft_config, training_arguments):
         peft_config=peft_config,
         train_dataset=dataset,
         formatting_func=formatting_prompts_func,
-        args=training_arguments
+        args=training_arguments,
     )
     return trainer
 
@@ -119,9 +119,9 @@ if __name__ == "__main__":
     set_env()
     
     # use if only you have wandb
-    wandb.init(
-        name=f"chatbot-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
-    )
+    # wandb.init(
+    #     name=f"chatbot-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    # )
     
     config = load_config('./modeling/config.yaml')
     dataset = get_dataset(config)
@@ -133,9 +133,11 @@ if __name__ == "__main__":
     train_args = get_train_args(config)
     trainer = get_trainer(model, tokenizer, dataset.dataset, peft_config, train_args)
     
-    trainer.train()
+    trainer.train(
+        resume_from_checkpoint="/home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/checkpoints/lora/checkpoint-3300"
+    )
     
     save_path = make_today_path(config["train_params"]["save_dir"])
     trainer.save_model(save_path)
-    
+    print(f"Saved Model to {save_path}")
     print("DONE")
