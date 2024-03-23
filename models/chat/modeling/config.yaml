@@ -1,19 +1,19 @@
 dataset:
   type: B # A(감성 대화) or B(공감 대화)
-  pathA: ../data/dataset.parquet
-  pathB: ../data/*/*/*.json
+  pathA: ./data/dataset.parquet
+  pathB: ./data/*/*/*.json
 train_params:
-  model_name: CurtisJeon/OrionStarAI-Orion-14B-Base-4bit
+  model_name: CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
   model_4bit: True
-  load_adapter: True
-  adapter_path: ../models/best_adapter_e9 # if load_adapter is true, load this adapter to model
-  output_dir: ../checkpoints/lora/  # checkpoint save dir
-  save_dir: ../models/  # final model save
-  lr_rate: 2e-4
+  load_adapter: False
+  adapter_path: ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
+  output_dir: ./checkpoints/lora/  # checkpoint save dir
+  save_dir: ./trained/  # final model save
+  lr_rate: 0.0004
   lr_scheduler_type: cosine
   weight_decay: 0.001
   max_grad_norm: 0.3
-  num_train_epochs: 5
+  num_train_epochs: 1
   batch_size: 1
   gradient_accumulation_steps: 8
   fp16: True
@@ -21,9 +21,9 @@ train_params:
   optim: paged_adamw_32bit
   device_map: auto
 lora:
-  lora_r: 8
+  lora_r: 16
   lora_alpha: 32
-  lora_dropout: 0.1
+  lora_dropout: 0.05
   target_modules: [q_proj, o_proj, k_proj, v_proj, gate_proj, up_proj, down_proj]
 quantization:
   use_4bit: True

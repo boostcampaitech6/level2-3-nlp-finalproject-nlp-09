@@ -1,3 +1,4 @@
+from datetime import datetime
 
 from load_chatbot_dataset import DatasetA, DatasetB, formatting_prompts_func
 from utils import load_config, set_env, make_today_path
@@ -12,6 +13,8 @@ from transformers import (
 
 from peft import LoraConfig
 from trl import SFTTrainer
+
+import wandb
 
 
 def get_dataset(config):
@@ -62,6 +65,7 @@ def get_model(config):
     model.config.pretraining_tp = 1
     
     if t_config["load_adapter"]:
+        print("Load Adapter from", t_config["adapter_path"])
         model.load_adapter(t_config["adapter_path"], "loaded")
         model.set_adapter("loaded")
     
@@ -85,7 +89,7 @@ def get_train_args(config):
         gradient_accumulation_steps=t_config['gradient_accumulation_steps'],
         optim=t_config['optim'],
         save_steps=10,
-        logging_steps=10,
+        logging_steps=1,
         lr_scheduler_type=t_config["lr_scheduler_type"],
         learning_rate=t_config['lr_rate'],
         weight_decay=t_config["weight_decay"],
@@ -102,7 +106,7 @@ def get_trainer(model, tokenizer, dataset, peft_config, training_arguments):
     trainer = SFTTrainer(
         model=model,
         tokenizer=tokenizer,
-        max_seq_length=670,
+        max_seq_length=4096,
         peft_config=peft_config,
         train_dataset=dataset,
         formatting_func=formatting_prompts_func,
@@ -113,7 +117,13 @@ def get_trainer(model, tokenizer, dataset, peft_config, training_arguments):
 
 if __name__ == "__main__":
     set_env()
-    config = load_config('./config.yaml')
+    
+    # use if only you have wandb
+    wandb.init(
+        name=f"chatbot-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+    )
+    
+    config = load_config('./modeling/config.yaml')
     dataset = get_dataset(config)
     
     peft_config = get_lora_config(config)
@@ -123,7 +133,7 @@ if __name__ == "__main__":
     train_args = get_train_args(config)
     trainer = get_trainer(model, tokenizer, dataset.dataset, peft_config, train_args)
     
-    # trainer.train()
+    trainer.train()
     
     save_path = make_today_path(config["train_params"]["save_dir"])
     trainer.save_model(save_path)

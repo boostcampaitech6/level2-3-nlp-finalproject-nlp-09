@@ -4,9 +4,15 @@
 - nvidia-driver : 535.161.07
 - cuda : 12.2
 - GPU : Tesla V100 32GB x 1
+
 ```bash
 pip install -r requirements.txt
 ```
+<!-- 
+## Install Docker
+- https://docs.docker.com/engine/install/ubuntu/ -->
+
+
 
 ## Model Info
 - base model : [OrionStarAI/Orion-14B-Base](https://huggingface.co/OrionStarAI/Orion-14B-Base)
