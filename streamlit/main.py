@@ -7,44 +7,9 @@ import streamlit as st
 import sqlite3
 
 from menu import menu
-
-def make_hashes(password):
-	return hashlib.sha256(str.encode(password)).hexdigest()
-
-def check_hashes(password,hashed_text):
-	if make_hashes(password) == hashed_text:
-		return hashed_text
-	return False
-
-def create_usertable():
-	c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT)')
-
-def add_userdata(username,password):
-	c.execute('INSERT INTO userstable(username,password) VALUES (?,?)',(username,password))
-	user_db.commit()
-
-def login_user(username,password):
-	c.execute('SELECT * FROM userstable WHERE username =? AND password = ?',(username,password))
-	data = c.fetchall()
-	return data
-
-def join_user(username):
-  c.execute('SELECT * FROM userstable WHERE username = ?', (username,))
-  data = c.fetchall()
-  return data
-
-def create_diarytable():
-  diary_c.execute('CREATE TABLE IF NOT EXISTS diarytable (diary_id TEXT, id INTEGER, date DATE, content TEXT, summary TEXT, emotion TEXT, word TEXT, PRIMARY KEY (diary_id, id))')
-
-def load_user_data(username):
-  diary_c.execute('SELECT * FROM diarytable WHERE id = ?', (username,))
-  data = diary_c.fetchall()
-  data = pd.DataFrame(data, columns=['diary_id', 'id', 'date', 'content', 'summary', 'emotion','word'])
-  data = data.apply(lambda x:x.replace("'", '"'))
-  return data
+from login import *
 
 def login():
-
   sidebar_title = st.sidebar.header('로그인')
   username = st.sidebar.text_input("ID")
   password = st.sidebar.text_input("Password",type='password')
@@ -52,36 +17,36 @@ def login():
   signin = st.sidebar.button('회원가입')
 
   if login:
-    create_usertable()
-    create_diarytable()
+    create_usertable(user_c)
+    create_diarytable(diary_c)
     hashed_pswd = make_hashes(password)
-    result = login_user(username,check_hashes(password,hashed_pswd))
+    result = login_user(user_c, username,check_hashes(password,hashed_pswd))
 
     if result:
       st.session_state['is_login'] = True
       st.session_state['id'] = username
-      st.session_state['my_data'] = load_user_data(username)
+      st.session_state['my_data'] = load_user_data(diary_c, username)
       st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       st.switch_page('pages/diary.py')
     else:
       st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
 
   if signin:
-    create_usertable()
+    create_usertable(user_c)
     if not password:
         st.sidebar.error('비밀번호를 입력해주세요')
         return
-    result = join_user(username)
+    result = join_user(user_c, username)
     if result:
       st.sidebar.error('이미 존재하는 아이디입니다.')
     else:
-      add_userdata(username,make_hashes(password))
+      add_userdata(user_c, username,make_hashes(password))
       user_db.commit()
       st.sidebar.success(f'가입을 환영합니다 {username}님')
       st.session_state['is_login'] = True
       st.session_state['id'] = username
       create_diarytable()
-      st.session_state['my_data'] = load_user_data(username)
+      st.session_state['my_data'] = load_user_data(user_c, username)
       st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       time.sleep(2)
       st.switch_page('pages/diary.py')
@@ -106,7 +71,7 @@ def main():
 if __name__ == '__main__':
   user_db = sqlite3.connect('user_data.db')
   diary = sqlite3.connect('diary.db')
-  c = user_db.cursor()
+  user_c = user_db.cursor()
   diary_c = diary.cursor()
   today = datetime.now().date()
   main()
