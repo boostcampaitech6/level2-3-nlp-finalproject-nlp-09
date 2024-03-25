@@ -8,6 +8,7 @@ def authenticated_menu():
         st.rerun()
     st.sidebar.page_link("pages/diary.py", label="오늘의 일기")
     st.sidebar.page_link("pages/summary.py", label="요약")
+    st.sidebar.page_link("pages/analytics.py", label="분석")
 
 
 def unauthenticated_menu():
