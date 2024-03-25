@@ -28,9 +28,6 @@ def run_classifier_training():
 def run_chatbot_training():
   pass
 
-def run_summary_training():
-  pass
-
 classifier_training = PythonOperator(
     task_id='classifier_training',
     python_callable=run_classifier_training,
@@ -43,9 +40,4 @@ chatbot_training = PythonOperator(
     dag=dag,
 )
 
-summary_training = PythonOperator(
-    task_id='summary_training',
-    python_callable=run_summary_training,
-    dag=dag,
-)
-classifier_training >> chatbot_training >> summary_training
+classifier_training >> chatbot_training
