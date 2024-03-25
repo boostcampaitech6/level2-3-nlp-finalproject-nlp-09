@@ -67,6 +67,7 @@ def main():
   menu()
   login()
   what_is_ed()
+  st.sidebar.page_link('https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09', label='Visit our Github')
 
 if __name__ == '__main__':
   user_db = sqlite3.connect('user_data.db')
