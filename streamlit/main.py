@@ -40,13 +40,13 @@ def login():
     if result:
       st.sidebar.error('이미 존재하는 아이디입니다.')
     else:
-      add_userdata(user_c, username,make_hashes(password))
+      add_userdata(user_c, user_db, username,make_hashes(password))
       user_db.commit()
       st.sidebar.success(f'가입을 환영합니다 {username}님')
       st.session_state['is_login'] = True
       st.session_state['id'] = username
-      create_diarytable()
-      st.session_state['my_data'] = load_user_data(user_c, username)
+      create_diarytable(diary_c)
+      st.session_state['my_data'] = load_user_data(diary_c, username)
       st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       time.sleep(2)
       st.switch_page('pages/diary.py')
