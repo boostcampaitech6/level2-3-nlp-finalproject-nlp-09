@@ -9,6 +9,7 @@ def authenticated_menu():
     st.sidebar.page_link("pages/diary.py", label="오늘의 일기")
     st.sidebar.page_link("pages/summary.py", label="요약")
     st.sidebar.page_link("pages/analytics.py", label="분석")
+    st.sidebar.page_link('https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09', label='Visit our Github')
 
 
 def unauthenticated_menu():
