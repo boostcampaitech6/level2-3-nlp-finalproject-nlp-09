@@ -84,6 +84,12 @@ def main():
     # 결측치 제거
     df = df.dropna()
     
+    # url 정보 제거
+    df = df.drop('url', axis=1)
+    
+    # date 열 이름 변경 : 직관적으로
+    df = df.rename(columns={'date':'created_date'})
+    
     df.to_csv('./labeled_data_details.csv',encoding='utf-8-sig')
     
 
