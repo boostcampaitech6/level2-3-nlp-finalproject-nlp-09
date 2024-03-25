@@ -1,6 +1,3 @@
-
-from utils import load_config, set_env
-
 import torch
 
 from transformers import (
@@ -94,6 +91,7 @@ assistant는 사용자의 말을 되풀이합니다. assistant는 user에게 질
 
 
 if __name__ == "__main__":
+    from utils import load_config, set_env
     set_env()
     config = load_config('./modeling/config.yaml')
     

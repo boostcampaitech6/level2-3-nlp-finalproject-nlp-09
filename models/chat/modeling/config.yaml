@@ -6,13 +6,13 @@ train_params:
   model_name: EleutherAI/polyglot-ko-5.8b  # CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
   model_4bit: True
   load_adapter: True
-  adapter_path: /home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/trained/01:18:560324-011856 # ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
+  adapter_path: ./trained/EleutherAI-polyglot-ko-5.8b-20240324-172752 # ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
   output_dir: ./checkpoints/lora/  # checkpoint save dir
   save_dir: ./trained/  # final model save
   lr_rate: 0.0004
   lr_scheduler_type: cosine
   weight_decay: 0.001
-  max_grad_norm: 0.3
+  max_grad_norm: 1.0
   num_train_epochs: 10
   batch_size: 1
   gradient_accumulation_steps: 8

@@ -6,6 +6,8 @@ from tqdm.auto import tqdm
 import pandas as pd
 from datasets import Dataset
 
+EOS_TOKEN = '</끝>'
+
 
 def read_json(file):
     """_summary_
@@ -34,7 +36,7 @@ def formatting_prompts_func(examples):
     for conversation in examples['conversation']:
         texts = []
         for line in conversation:
-            text = f"###{line['role']}: {line['content']}{'</끝>' if line['role']!='user' else ''}"
+            text = f"{line['role']}: {line['content']}{EOS_TOKEN if line['role']!='user' else ''}"
             texts.append(text)
         output_texts.append("\n".join(texts))
     return output_texts
@@ -92,7 +94,7 @@ class DatasetB:
         behavior = data['info']['listener_behavior']
         conversation = [
             {
-                'role' : 'user' if x['role'] == 'speaker' else 'assistant',
+                'role' : '나' if x['role'] == 'speaker' else '친구',
                 'content' : x['text'].replace('감정화자','너').replace('공감화자', '나')
             } for x in data['utterances']
         ]

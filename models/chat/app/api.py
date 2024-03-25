@@ -1,21 +1,22 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import json
+import os
 
 from models import ChatPipe
-from assistant_chats import get_random_first_chat, get_random_second_chat
+
+os.environ['HF_TOKEN'] = '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'
 
 router = APIRouter()
 
-# pipe = ChatPipe(
+# summary_pipe = ChatPipe(
 #     "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit", 
-#     '../models/best_adapter_e5', 
+#     '../models/best_adapter_e9',
 #     streamer=True
 # )
 
 pipe = ChatPipe(
     "EleutherAI/polyglot-ko-5.8b", 
-    '/home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/trained/01:18:560324-011856', 
+    'm2af/EleutherAI-polyglot-ko-5.8b-adapter', 
     streamer=True
 )
 

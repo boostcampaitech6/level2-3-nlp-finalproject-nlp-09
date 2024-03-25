@@ -26,6 +26,8 @@ def set_seed(seed:int = 42):
     print('SEED SET TO:', seed)
     
 
-def make_today_path(dir):
-    current_time = datetime.datetime.now().strftime("%T%m%d-%H%M%S")
-    return os.path.join(dir, current_time)
+def make_today_path(dir, model_name):
+    # model name is huggingface name
+    model_name = model_name.replace('/', '-')
+    file_path = model_name + '-' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    return os.path.join(dir, file_path)

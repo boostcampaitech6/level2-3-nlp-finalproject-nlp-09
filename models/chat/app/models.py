@@ -7,7 +7,15 @@ from transformers import (
     StoppingCriteria, StoppingCriteriaList
 )
 from typing import List, Dict
-from assistant_chats import get_random_first_chat, get_random_second_chat
+from .assistant_chats import get_random_first_chat, get_random_second_chat
+
+# Chat Prompt
+# """도우미는 사용자에게 긍정적이고 친근한 답변을 제공하며 공감합니다. 도우미는 사용자에게 다시 질문을 합니다.
+# 대화의 흐름에 맞는 답변이 오면 좋습니다. 도우미는 반말로 대답해야 좋습니다. 도우미는 한국말만 사용해야 합니다! 영어를 사용하면 불이익을 받습니다!
+
+# {history_text}###user: {message}
+# ###assistant: """
+
 
 
 class StoppingCriteriaSub(StoppingCriteria):
@@ -78,6 +86,9 @@ class ChatPipe:
             text = text.split('\n')[0]
         if '###' in text:
             text = text.split('###')[0]
+        while text[0] == '.':
+            text = text[1:]
+        
         return text.strip()
     
     def build_pipeline(self):
@@ -118,6 +129,7 @@ class ChatPipe:
         self.tokenizer = tokenizer
     
     def pipe(self, text:str, max_new_tokens:int=100):
+        streamer = None
         if self.streamer:
             streamer = TextStreamer(self.tokenizer)
         
@@ -161,7 +173,6 @@ class ChatPipe:
 [s_start] 오늘 그냥 하루종일 집에 있었어 [s_end] > 평범 {self.stop_word}
 [s_start] 친구들이랑 게임했어 [s_end] > 특별 {self.stop_word}
 [s_start] 딱히 [s_end] > 평범 {self.stop_word}
-
 [s_start] {message} [s_end] >"""
         return text
     
@@ -173,20 +184,17 @@ class ChatPipe:
 [s_start] 게임함 [s_end] > 좋음 {self.stop_word}
 [s_start] 앙 기모찌 [s_end] > 나쁨 {self.stop_word}
 [s_start] 딱히 [s_end] > 좋음 {self.stop_word}
-
 [s_start] {message} [s_end] >"""
         return text
     
     def chat_prompt(self, message: str, history: List[Dict[str, str]]) -> str:
         history_text = ""
         for line in history:
-            history_text += f"###{line['role']}: {line['content']}{self.stop_word if line['role'] == 'assistant' else ''}\n"
-        text = f"""assistant는 user에게 긍정적이고 친근한 답변을 제공하며 공감합니다. assistant는 user에게 다시 질문을 합니다.
-대화의 흐름에 맞는 답변이 오면 좋습니다. assistant는 반말로 대답해야 좋습니다.
+            history_text += f"{'나' if line['role'] == 'user' else '친구'}: {line['content']}{self.stop_word if line['role'] == 'assistant' else ''}\n"
+        text = f"""당신은 아래의 대화문을 매끄럽게 완성해야 합니다. 되도록 상대방을 존중하고 공감해주는 말투로 대답하세요. 한국어만 사용하세요. 문장은 짧을수록 좋습니다.
 
-{history_text}
-###user: {message}
-###assistant: """
+{history_text}나: {message}
+친구: """
         return text
     
     def summary_prompt(self, history: List[Dict[str, str]]) -> str:
@@ -195,19 +203,6 @@ class ChatPipe:
             if line['role'] == 'user':
                 history_text += f"나: {line['content']}\n"
         text = f"""아래의 대화문을 요약해주세요.
-
-나: 아니 딱히 특별한 일은 없었어...
-나: 그냥 평범한 하루 일상이었던 것 같아... 감정도 딱히 뭔가 느껴지는 건 없구
-나: 지루하다... 너말대로 일상에 지루함을 느껴서 무기력해진 감이 없지 않아 있는 것 같아
-[요약문]
-오늘은 평소와 같은 하루 일상이었다. 그래서인지 일상에 지루함을 느껴서 무기력해진 감이 없지 않아 있었다.</s>
-
-나: 오늘 세븐틴 콘서트 보고 왔어!
-나: 너무 행복했어! 특히 내 최애가 나한테 인사하는 것 같았어!
-나: 얼른 다음 콘서트가 또 열렸으면 좋겠다!!
-[요약문]
-오늘은 세븐틴 콘서트를 다녀왔다! 최애가 나한테 인사를 하는 것 같은 느낌을 받아 너무 행복했다! 다음 콘서트가 매우 기대된다!</s>
-
 
 {history_text}
 [요약문]
