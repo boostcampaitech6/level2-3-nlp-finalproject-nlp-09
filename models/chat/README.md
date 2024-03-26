@@ -15,26 +15,30 @@ pip install -r requirements.txt
 
 
 ## Model Info
+We have 2 versions of Chat model
+### Orion Chat-Bot
 - base model : [OrionStarAI/Orion-14B-Base](https://huggingface.co/OrionStarAI/Orion-14B-Base)
 - quantized model : [CurtisJeon/OrionStarAI-Orion-14B-Base-4bit](https://huggingface.co/CurtisJeon/OrionStarAI-Orion-14B-Base-4bit)
-- fine-tuned adapter : []()
+- fine-tuned adapter : [m2af/OrionStarAI-Orion-14B-Base-adapter](https://huggingface.co/m2af/OrionStarAI-Orion-14B-Base-adapter)
+### Polyglot-ko Chat-Bot
+- base model : [EleutherAI/polyglot-ko-5.8b](https://huggingface.co/EleutherAI/polyglot-ko-5.8b)
+- fine-tuned adapter : [m2af/EleutherAI-polyglot-ko-5.8b-adapter](https://huggingface.co/m2af/EleutherAI-polyglot-ko-5.8b-adapter)
 
 ## Quick Tour
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
-model_name  = "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit"
 model = AutoModelForCausalLM.from_pretrained(
-    model_name,
+    "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit",
     low_cpu_mem_usage=True,
     trust_remote_code=True,
     device_map="auto",
 )
 model.config.use_cache = True
     
-model.load_adapter("./models/best_adaptor", "loaded")
+model.load_adapter("m2af/OrionStarAI-Orion-14B-Base-adapter", "loaded")
 model.set_adapter("loaded")
 
-tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("CurtisJeon/OrionStarAI-Orion-14B-Base-4bit", trust_remote_code=True)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "right"
 
