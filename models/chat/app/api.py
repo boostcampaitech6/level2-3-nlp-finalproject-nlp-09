@@ -8,15 +8,14 @@ os.environ['HF_TOKEN'] = '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'
 
 router = APIRouter()
 
-# summary_pipe = ChatPipe(
-#     "CurtisJeon/OrionStarAI-Orion-14B-Base-4bit", 
-#     '../models/best_adapter_e9',
-#     streamer=True
-# )
+summary_pipe = ChatPipe(
+    "CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit", 
+    streamer=True
+)
 
 pipe = ChatPipe(
-    "EleutherAI/polyglot-ko-5.8b", 
-    'm2af/EleutherAI-polyglot-ko-5.8b-adapter', 
+    "CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit", 
+    '/home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/trained/CurtisJeon-OrionStarAI-Orion-14B-Chat-4bit-20240326-014234', 
     streamer=True
 )
 
@@ -63,9 +62,9 @@ async def generate_text(req: ChatRequest) -> ChatResponse:
 @router.post("/summary/")
 async def summary_text(req: SummaryRequest) -> SummaryResponse:
     try:
-        prompt = pipe.summary_prompt(req.query)
-        result = pipe.pipe(prompt)
-        text = pipe.post_process(result)
+        prompt = summary_pipe.summary_prompt(req.query)
+        result = summary_pipe.pipe(prompt)
+        text = summary_pipe.post_process(result)
         
     except RuntimeError:
         raise HTTPException(status_code=500, detail="Model is not initialized")

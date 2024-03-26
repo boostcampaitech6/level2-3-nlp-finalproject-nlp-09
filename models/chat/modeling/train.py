@@ -106,7 +106,7 @@ def get_trainer(model, tokenizer, dataset, peft_config, training_arguments):
     trainer = SFTTrainer(
         model=model,
         tokenizer=tokenizer,
-        max_seq_length=4096,
+        max_seq_length=650,
         peft_config=peft_config,
         train_dataset=dataset,
         formatting_func=formatting_prompts_func,

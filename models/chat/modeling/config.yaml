@@ -3,9 +3,9 @@ dataset:
   pathA: ./data/dataset.parquet
   pathB: ./data/*/*/*.json
 train_params:
-  model_name: EleutherAI/polyglot-ko-5.8b  # CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
+  model_name: CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit  # CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
   model_4bit: True
-  load_adapter: True
+  load_adapter: False
   adapter_path: ./trained/EleutherAI-polyglot-ko-5.8b-20240324-172752 # ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
   output_dir: ./checkpoints/lora/  # checkpoint save dir
   save_dir: ./trained/  # final model save
@@ -13,7 +13,7 @@ train_params:
   lr_scheduler_type: cosine
   weight_decay: 0.001
   max_grad_norm: 1.0
-  num_train_epochs: 10
+  num_train_epochs: 2
   batch_size: 1
   gradient_accumulation_steps: 8
   fp16: True
@@ -24,7 +24,7 @@ lora:
   lora_r: 16
   lora_alpha: 32
   lora_dropout: 0.05
-  target_modules: ["query_key_value"] # [q_proj, o_proj, k_proj, v_proj, gate_proj, up_proj, down_proj]
+  target_modules: [q_proj, o_proj, k_proj, v_proj, gate_proj, up_proj, down_proj] # ["query_key_value"] # [q_proj, o_proj, k_proj, v_proj, gate_proj, up_proj, down_proj]
 quantization:
   use_4bit: True
   bnb_4bit_compute_dtype: float16

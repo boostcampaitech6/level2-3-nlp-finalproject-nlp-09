@@ -4,15 +4,14 @@ from app.models import ChatPipe
 
 os.environ['HF_TOKEN'] = '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'
 
-# pipe = ChatPipe(
-#     "EleutherAI/polyglot-ko-5.8b", 
-#     'm2af/EleutherAI-polyglot-ko-5.8b-adapter', 
-#     streamer=True
-# )
-
 pipe = ChatPipe(
     "CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit", 
-    # '/home/jhw/level2-3-nlp-finalproject-nlp-09/models/chat/trained/Orion-Base-240323-043404/loaded', 
+    'm2af/EleutherAI-polyglot-ko-5.8b-adapter', 
+    streamer=True
+)
+
+summary_pipe = ChatPipe(
+    "CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit",  
     streamer=False
 )
 
