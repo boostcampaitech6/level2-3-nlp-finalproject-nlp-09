@@ -12,7 +12,7 @@ def load_config(config_file):
     return config
 
 def set_env():
-    os.environ['HF_TOKEN'] = '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'
+    os.environ['HF_TOKEN'] = 'your key'
 
 def set_seed(seed:int = 42):
     os.environ['PYTHONHASHSEED'] = str(seed)

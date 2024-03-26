@@ -78,11 +78,11 @@ class DatasetA:
 
 
 class DatasetB:    
-    def __init__(self, file_paths: str ='./data/*/*/*.json'):
+    def __init__(self, file_paths: str ='./data/*/*.json'):
         """_summary_
             AIHUB 감성대화셋 loader & class
         Args:
-            file_paths (str, optional): Files to get json by glob method. Defaults to './data/*/*/*.json'.
+            file_paths (str, optional): Files to get json by glob method. Defaults to './data/*/*.json'.
         """
         self.file_paths = file_paths
         self.files = glob(self.file_paths)
