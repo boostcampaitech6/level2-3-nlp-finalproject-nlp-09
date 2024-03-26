@@ -31,14 +31,14 @@ def main():
     
   for message in st.session_state.messages:
     if message['role'] == 'user':
-      with st.chat_message(message['role'], avatar=Image.open('images/human.png')):
+      with st.chat_message(message['role'], avatar="🧑"):
           st.markdown(message["content"])
     else:
-      with st.chat_message(message['role'], avatar=Image.open('images/buduck.png')):
+      with st.chat_message(message['role'], avatar="🐥"):
           st.markdown(message["content"])
    
   if prompt:
-    st.chat_message("user", avatar=Image.open('images/human.png')).markdown(prompt)    
+    st.chat_message("user", avatar="🧑").markdown(prompt)    
     data = {
       "generation_id" : st.session_state.count, # generation task id
       "query" : prompt, # 주어진 질문
@@ -46,7 +46,7 @@ def main():
     }
     st.session_state.count += 1
 
-    with st.chat_message("assistant", avatar=Image.open('images/buduck.png')):
+    with st.chat_message("assistant", avatar="🐥"):
       with st.spinner('답변 생성중'):
         response = call_api(st.secrets['chatbot_url'],data)
         
@@ -55,17 +55,17 @@ def main():
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
 
-  if st.session_state.count == 5 and st.session_state.today_data.empty:
-    with st.chat_message("assistant"):
-      st.markdown('내용을 요약하시겠습니까?')
-      summary_btn = st.button('요약하기')
+  if st.session_state.count >= 9 and st.session_state.today_data.empty:
+    with st.chat_message("assistant", avatar="✍️"):
+      st.markdown('오늘의 일기를 정리해줄까? 아니면 더 이야기해도 좋아!')
+      summary_btn = st.button('일기 생성 🧙')
     if summary_btn:
-      with st.chat_message("assistant"):
-        with st.spinner('요약중'):
+      with st.chat_message("assistant", avatar="🐥"):
+        with st.spinner('Dr.부덕이가 일기를 생성중...'):
           st.session_state.count += 1
           data = {
-            "generation_id": st.session_state.count, # generation task id
-            "query" : st.session_state['messages'], # 주어진 질문
+            "generation_id": st.session_state.count,
+            "query" : st.session_state['messages'],
           }
           summary = call_api(st.secrets['summary_url'], data)
           data = {
@@ -77,7 +77,7 @@ def main():
             "chat": st.session_state.messages
           }
           word = call_word_api(st.secrets['word_url'], data)
-          word = str(word ).replace("'", '"')
+          word = str(word).replace("'", '"')
       c.execute('INSERT INTO diarytable(diary_id, id, date, content, summary, emotion, word) VALUES (?,?,?,?,?,?,?)',(f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                                                                                       st.session_state['id'],
                                                                                                                       today,
