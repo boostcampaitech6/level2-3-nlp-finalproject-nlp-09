@@ -56,6 +56,21 @@ I used two datasets from AIHUB
 - DatasetB: [공감형 대화](https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=71305)
   - Unzip all the files with .json
 
+### Data Foler
+Download dataset from aihub and make your data file path like below.
+```
+📦chat
+ ┣ 📂app
+ ┣ 📂data
+ ┃ ┣ 📂Training
+ ┃ ┃ ┗ 📜*.json
+ ┃ ┣ 📂Validation
+ ┃ ┃ ┗ 📜*.json
+ ┃ ┗ 📜dataset.parquet
+ ┣ 📂modeling
+ ┗ 📜...
+```
+
 ## Config Settings
 Hyperparameters are loaded from `./config.yaml`
 
@@ -65,6 +80,6 @@ python ./modeling/train.py
 ```
 
 ## Inference
-```
+```bash
 python ./modeling/inference.py
 ```
