@@ -1,5 +1,9 @@
 # 📖ABCDE(A BoostCamp Diary for Emotions) : 대화형 감정 일기
-TBD: 시연 영상 gif
+
+
+https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/assets/81287077/949b75bb-c02f-4ad0-8322-393ea13cf2a2
+
+
 
 **ABCDE**는 하루의 일상을 마무리하면서 🦆**Dr.부덕이**와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스입니다.
 - **[직접 체험하기](https://m2af-abcde.streamlit.app/)** (서비스 기간: ~24.04.02)
