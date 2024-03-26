@@ -1,12 +1,12 @@
 dataset:
   type: B # A(감성 대화) or B(공감 대화)
   pathA: ./data/dataset.parquet
-  pathB: ./data/*/*/*.json
+  pathB: ./data/*/*.json
 train_params:
-  model_name: CurtisJeon/OrionStarAI-Orion-14B-Chat-4bit  # CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
+  model_name: CurtisJeon/OrionStarAI-Orion-14B-Base-4bit  # CurtisJeon/OrionStarAI-Orion-14B-Base-4bit # EleutherAI/polyglot-ko-5.8b 
   model_4bit: True
-  load_adapter: False
-  adapter_path: ./trained/EleutherAI-polyglot-ko-5.8b-20240324-172752 # ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
+  load_adapter: True
+  adapter_path: m2af/OrionStarAI-Orion-14B-Base-adapter # ./trained/best_adapter_e9 # if load_adapter is true, load this adapter to model
   output_dir: ./checkpoints/lora/  # checkpoint save dir
   save_dir: ./trained/  # final model save
   lr_rate: 0.0004
