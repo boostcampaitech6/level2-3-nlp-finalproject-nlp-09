@@ -11,7 +11,6 @@ from chatbot import *
 
 def main():
   menu_with_redirect()
-  today = datetime.now().date()
 
   if 'count' not in st.session_state:
     st.session_state.count = 1
@@ -80,7 +79,7 @@ def main():
           word = str(word).replace("'", '"')
       c.execute('INSERT INTO diarytable(diary_id, id, date, content, summary, emotion, word) VALUES (?,?,?,?,?,?,?)',(f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                                                                                       st.session_state['id'],
-                                                                                                                      today,
+                                                                                                                      st.session_state['today'],
                                                                                                                       str(st.session_state['messages']).replace("'generation_id'", '"generation_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                                                                                       summary,
                                                                                                                       emotion,
@@ -88,7 +87,7 @@ def main():
       diary.commit()
       st.session_state['today_data'] = pd.DataFrame(data=[[f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
                                                           st.session_state['id'],
-                                                          today,
+                                                          st.session_state['today'],
                                                           str(st.session_state['messages']).replace("'generation_id'", '"generation_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
                                                           summary,
                                                           emotion,

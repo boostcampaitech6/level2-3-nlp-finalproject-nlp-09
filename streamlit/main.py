@@ -27,7 +27,7 @@ def login():
       st.session_state['is_login'] = True
       st.session_state['id'] = username
       st.session_state['my_data'] = load_user_data(diary_c, username)
-      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
+      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])]
       st.switch_page('pages/diary.py')
     else:
       st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
@@ -63,6 +63,7 @@ def main():
   for key in st.session_state.keys():
     del st.session_state[key]
     
+  st.session_state['today'] = datetime.now().date()
   st.session_state['is_login'] = False
   st.session_state['my_data'] = ''
   st.session_state['id'] = ''
@@ -78,5 +79,4 @@ if __name__ == '__main__':
   diary = sqlite3.connect('diary.db')
   user_c = user_db.cursor()
   diary_c = diary.cursor()
-  today = datetime.now().date()
   main()
