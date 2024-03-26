@@ -4,6 +4,7 @@ import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
 import json
+from scipy.interpolate import interp1d
 
 from menu import menu_with_redirect
 
@@ -35,12 +36,19 @@ def main():
         value *= -1
       
       value_list.append(value)
-
+  
+    f = interp1d([0, 1, 2, 3, 4], value_list, kind=2)
+    x = np.linspace(0, 4, 1000)
+    y = f(x)
     fig, ax = plt.subplots()
     ax.set_title(f'{st.session_state['id']}님의 감정 흐름')
-    ax.plot(data['date'], value_list)
+    ax.plot(x, y)
+    ax.plot(data['date'], value_list, 'o')
+    
+    ax.axhline(y=0, color='black', linestyle='--')
     st.pyplot(fig)
-
+    st.caption('원점을 기준으로 +는 긍정 -는 부정을 나타냅니다. 1점에 가까울수록 긍정적인 감정이 크고 -1점에 가까울수록 부정적인 감정이 크게 나타납니다.')
+    
     st.header(f'{st.session_state['id']}님의 단어 사용 빈도')
     st.write(f'{st.session_state['id']}님이 가장 자주 사용한 단어는 다음과 같습니다.')
     col1, col2 = st.columns(2)
@@ -56,11 +64,12 @@ def main():
       fig, ax = plt.subplots()
       ax.bar(word_title, word_value)
       st.pyplot(fig)
-    
+
     with col2:
       st.write(f'{st.session_state['id']}님은 지난 5일 동안')
       for word in most_5:
         st.write(f'{word[0]} {word[1]}회')
       st.write('를 사용하셨습니다.')
+
 if __name__ == '__main__':
   main()
