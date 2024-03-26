@@ -13,7 +13,10 @@ pip install flash-attn --no-build-isolation
 ## Install Docker
 - https://docs.docker.com/engine/install/ubuntu/ -->
 
-
+## Run FastAPI for Depoly
+```bash
+python ./app/main.py
+```
 
 ## Model Info
 We have 2 versions of Chat model
