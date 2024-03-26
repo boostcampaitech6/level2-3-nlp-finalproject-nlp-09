@@ -18,8 +18,12 @@ class RE_Dataset(torch.utils.data.Dataset):
         return len(self.labels)
 
     def select(self, indices):
-        return ({key: val[indices] for key, val in self.pair_dataset.items()},
-                          self.labels[indices])
+        items = []
+        for idx in indices:
+            item = {key: val[idx].clone().detach() for key, val in self.pair_dataset.items()}
+            item['labels'] = torch.tensor(self.labels[idx])
+            items.append(item)
+        return items
         
 def preprocessing_dataset(dataset):
   """ 처음 불러온 csv 파일을 원하는 형태의 DataFrame으로 변경 시켜줍니다."""
