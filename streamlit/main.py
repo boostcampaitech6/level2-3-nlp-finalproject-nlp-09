@@ -53,9 +53,10 @@ def login():
 def what_is_ed():
   st.title('A BoostCamp Diary for Emotions')
   st.write('하루의 일상을 마무리하면서 Dr.부덕이와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스')
-  st.subheader('오늘의 일기를 쓰기 전에 부덕이가 할말이 있데요!')
+  st.subheader('오늘의 일기를 쓰기 전에 부덕이가 할말이 있대요!')
   st.image('images/howto.png')
-  st.write('대화를 최소 4번 이상 주고받아야 Dr.부덕이가 일기를 요약할 수 있어!')
+  st.caption('약간 주의! 부덕이는 해외파라 잘못 알아들을 수 있어요!')
+  st.write('대화를 최소 4번 이상 주고받아야 Dr.부덕이가 일기를 요약할 수 있어요!')
 
 def main():
   for key in st.session_state.keys():
