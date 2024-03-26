@@ -26,8 +26,8 @@ class SummaryResponse(BaseModel):
 async def summary_text(req: SummaryRequest) -> SummaryResponse:
     try:
         prompt = summary_pipe.summary_prompt(req.query)
-        result = summary_pipe.pipe(prompt)
-        text = summary_pipe.post_process(result)
+        result = summary_pipe.pipe(prompt, 500)
+        text = "오늘은" + summary_pipe.post_process(result)
         
     except RuntimeError:
         raise HTTPException(status_code=500, detail="Model is not initialized")
