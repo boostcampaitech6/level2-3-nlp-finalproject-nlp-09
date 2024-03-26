@@ -18,7 +18,6 @@ exceptiongroup==1.2.0
 faiss-gpu==1.7.2
 fastapi==0.110.0
 filelock==3.13.1
-flash-attn==2.5.6
 frozenlist==1.4.1
 fsspec==2024.2.0
 greenlet==3.0.3
