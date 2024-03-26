@@ -45,7 +45,7 @@ tokenizer.padding_side = "right"
 
 # Generate Sample
 outputs = model.generate(**tokenizer("안녕하세요, 반갑습니다.", return_tensors="pt"))
-print(outputs)
+print(tokenizer.decode(outputs[0]))
 ```
 
 
