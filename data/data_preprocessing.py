@@ -76,6 +76,13 @@ def main():
     # raw 데이터 형태로 변환 후, 저장
     df = pd.DataFrame(result)
     
+    # url 정보 제거
+    df = df.drop('url', axis=1)
+    
+    # date 열 이름 변경 : 직관적으로
+    df = df.rename(columns={'date':'created_date'})
+    
+    
     df.to_csv('./labeled_data.csv',encoding='utf-8-sig')
     
 
