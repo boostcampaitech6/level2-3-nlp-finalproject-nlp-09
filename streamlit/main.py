@@ -27,7 +27,6 @@ def login():
       st.session_state['is_login'] = True
       st.session_state['id'] = username
       st.session_state['my_data'] = load_user_data(diary_c, username)
-      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])]
       st.switch_page('pages/diary.py')
     else:
       st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
@@ -48,7 +47,6 @@ def login():
       st.session_state['id'] = username
       create_diarytable(diary_c)
       st.session_state['my_data'] = load_user_data(diary_c, username)
-      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
       time.sleep(2)
       st.switch_page('pages/diary.py')
 
@@ -67,7 +65,6 @@ def main():
   st.session_state['is_login'] = False
   st.session_state['my_data'] = ''
   st.session_state['id'] = ''
-  st.session_state['today_data'] = pd.DataFrame()
 
   menu()
   login()

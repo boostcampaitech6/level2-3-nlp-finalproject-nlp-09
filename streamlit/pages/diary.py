@@ -8,6 +8,7 @@ from PIL import Image
 
 from menu import menu_with_redirect
 from chatbot import *
+from login import load_user_data
 
 def main():
   menu_with_redirect()
@@ -21,11 +22,11 @@ def main():
   st.divider()
 
 
-  if st.session_state.today_data.empty:
+  if st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])].empty:
     prompt = st.chat_input()
   else:
     prompt = st.chat_input(disabled=True)
-    st.session_state.messages = json.loads(st.session_state.today_data.content.values[0])
+    st.session_state.messages = json.loads(st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])].content.values[0])
     st.session_state['count'] = st.session_state.messages[-1]['generation_id']
     
   for message in st.session_state.messages:
@@ -54,7 +55,7 @@ def main():
       st.session_state.messages.append({'generation_id': st.session_state.count, "role": "assistant", "content": response})
       st.markdown(response)
 
-  if st.session_state.count >= 9 and st.session_state.today_data.empty:
+  if st.session_state.count >= 9 and st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])].empty:
     with st.chat_message("assistant", avatar="✍️"):
       st.markdown('오늘의 일기를 정리해줄까? 아니면 더 이야기해도 좋아!')
       summary_btn = st.button('일기 생성 🧙')
@@ -85,14 +86,7 @@ def main():
                                                                                                                       emotion,
                                                                                                                       word))
       diary.commit()
-      st.session_state['today_data'] = pd.DataFrame(data=[[f"{datetime.today().strftime('%y%m%d')}_{st.session_state['id']}",
-                                                          st.session_state['id'],
-                                                          st.session_state['today'],
-                                                          str(st.session_state['messages']).replace("'generation_id'", '"generation_id"').replace("'role'", '"role"').replace("'user'", '"user"').replace("'assistant'", '"assistant"').replace("'content': '", '"content": "').replace("'}", '"}'),
-                                                          summary,
-                                                          emotion,
-                                                          word]],
-                                                    columns=st.session_state['my_data'].columns.to_list())
+      st.session_state['my_data'] = load_user_data(diary, st.session_state['id'])
       st.switch_page('pages/summary.py')
     
           

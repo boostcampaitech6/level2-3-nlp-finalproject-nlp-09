@@ -17,13 +17,13 @@ def main():
   st.title(f'{datetime.now().year}년 {datetime.now().month}월 {datetime.now().day}일 일기 요약')
   st.divider()
 
-  if st.session_state['today_data'].empty:
+  if st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])].empty:
     st.write('오늘의 일기가 없습니다. 오늘의 일기를 먼저 작성해주세요.')
   else:
     st.header('오늘의 일기 요약')
-    st.write(st.session_state['today_data']['summary'].values[0])
+    st.write(st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])]['summary'].values[0])
 
-    emotion = json.loads(st.session_state['today_data']['emotion'].values[0])
+    emotion = json.loads(st.session_state['my_data'][st.session_state['my_data']['date']==str(st.session_state['today'])]['emotion'].values[0])
     emotion_title = [data[0] for data in emotion.values()]
     emotion_value = [data[1] for data in emotion.values()]
 
