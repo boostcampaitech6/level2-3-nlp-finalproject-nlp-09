@@ -1,0 +1,5 @@
+streamli==1.32.2
+pandas==2.1.1
+matplotlib==3.8.3
+koreanize_matplotlib==0.1.1
+scipy==1.11.3
