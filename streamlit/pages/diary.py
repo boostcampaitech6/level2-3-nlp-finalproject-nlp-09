@@ -86,7 +86,7 @@ def main():
                                                                                                                       emotion,
                                                                                                                       word))
       diary.commit()
-      st.session_state['my_data'] = load_user_data(diary, st.session_state['id'])
+      st.session_state['my_data'] = load_user_data(c, st.session_state['id'])
       st.switch_page('pages/summary.py')
     
           
