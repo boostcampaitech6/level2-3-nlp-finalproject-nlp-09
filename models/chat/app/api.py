@@ -4,8 +4,6 @@ import os
 
 from models import ChatPipe
 
-os.environ['HF_TOKEN'] = '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'
-
 router = APIRouter()
 
 pipe = ChatPipe(
