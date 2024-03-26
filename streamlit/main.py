@@ -2,6 +2,7 @@ import hashlib
 import time
 import pandas as pd
 from datetime import datetime
+from PIL import Image
 
 import streamlit as st
 import sqlite3
@@ -54,6 +55,8 @@ def login():
 def what_is_ed():
   st.title('A BoostCamp Diary for Emotions')
   st.write('하루의 일상을 마무리하면서 Dr.부덕이와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스')
+  st.subheader('오늘의 일기를 쓰기 전에 부덕이가 할말이 있데요!')
+  st.image('images/howto.png')
 
 def main():
   for key in st.session_state.keys():
