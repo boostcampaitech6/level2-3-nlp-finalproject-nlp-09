@@ -80,10 +80,10 @@ class ChatPipe:
         text = text.replace(';','')
         text = text.replace(']', "")
         text = text.replace('user', '친구')
+        text = text.replace('ooo','')
         text = text.replace('oo','')
-        text = text.replace('ooo','친구')
-        text = text.replace('00','친구')
-        text = text.replace('000','친구')
+        text = text.replace('000','')
+        text = text.replace('00','')
         text = text.replace('</끝>', "")
         if '\n' in text:
             text = text.split('\n')[0]
@@ -92,10 +92,10 @@ class ChatPipe:
         while text[0] == '.':
             text = text[1:]
         
-        text = text.replace('oo씨','친구')
         text = text.replace('ooo씨','친구')
-        text = text.replace('00씨','친구')
+        text = text.replace('oo씨','친구')
         text = text.replace('000씨','친구')
+        text = text.replace('00씨','친구')
         
         return text.strip()
     
@@ -211,13 +211,10 @@ class ChatPipe:
             if line['role'] == 'user':
                 history_text += f"나: {line['content']}\n"
         text = f"""[명령어]
-아래의 대화문을 읽고 나에 대한 일기를 작성하듯 구체적으로 요약하세요.
-한글만 사용하세요. Use Only Korean!!
-편안한 말투로 작성하세요.
+아래의 대화문을 읽고 `나`에 대한 일기를 작성하듯 구체적으로 요약하세요.
 있는 내용에만 근거하세요. 함부로 추론하면 불이익을 받습니다.
 [대화문]
-{history_text}
-[요약문]
+{history_text}[요약문]
 오늘은"""
 
         return text
