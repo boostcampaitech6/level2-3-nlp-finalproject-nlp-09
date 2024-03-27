@@ -202,14 +202,13 @@ class ChatPipe:
         for line in history:
             if line['role'] == 'user':
                 history_text += f"나: {line['content']}\n"
+            # else:
+            #     history_text += f"부덕이: {line['content']}\n"
         text = f"""[명령어]
-아래의 대화문을 읽고 나에 대한 일기를 작성하듯 구체적으로 요약하세요.
-한글만 사용하세요. Use Only Korean!!
-편안한 말투로 작성하세요.
-있는 내용에만 근거하세요. 함부로 추론하면 불이익을 받습니다.
+아래의 대화문을 읽고 `나`의 관점을 중심으로 일기를 작성하듯 구체적으로 요약하세요.
+주어진 내용에만 근거하세요. 추가적인 정보는 불이익을 받습니다.
 [대화문]
-{history_text}
-[요약문]
-오늘은"""
+{history_text}[요약문]
+오늘은 """
 
         return text
