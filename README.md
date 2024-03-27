@@ -13,7 +13,7 @@ https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/assets/8128
 - streamlit: [streamlit/readme.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/streamlit/readme.md)
 - models
   - chat: [models/chat/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/models/chat/README.md)
-  - emotion classifier: [TBD]()
+  - emotion classifier: [models/classifier/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/models/classifier/README.md)
   - summary: [models/summary/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/models/summary/README.md)
 
 
