@@ -8,9 +8,10 @@
 pip install -r requirements.txt
 ```
 ## Run FastAPI for Deploy
+
 ```python
 python ./app/main.py
-'''
+```
 
 
 ## Model Info
