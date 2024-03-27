@@ -80,10 +80,10 @@ class ChatPipe:
         text = text.replace(';','')
         text = text.replace(']', "")
         text = text.replace('user', '친구')
+        text = text.replace('ooo','')
         text = text.replace('oo','')
-        text = text.replace('ooo','친구')
-        text = text.replace('00','친구')
-        text = text.replace('000','친구')
+        text = text.replace('000','')
+        text = text.replace('00','')
         text = text.replace('</끝>', "")
         if '\n' in text:
             text = text.split('\n')[0]
@@ -92,10 +92,10 @@ class ChatPipe:
         while text[0] == '.':
             text = text[1:]
         
-        text = text.replace('oo씨','친구')
         text = text.replace('ooo씨','친구')
-        text = text.replace('00씨','친구')
+        text = text.replace('oo씨','친구')
         text = text.replace('000씨','친구')
+        text = text.replace('00씨','친구')
         
         return text.strip()
     
