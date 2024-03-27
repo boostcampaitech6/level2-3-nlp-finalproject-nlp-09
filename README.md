@@ -8,10 +8,11 @@ https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/assets/8128
 **ABCDE**는 하루의 일상을 마무리하면서 🦆**Dr.부덕이**와 나눈 대화를 바탕으로 일기를 생성해주는 감정 일기 서비스입니다.
 - **[직접 체험하기](https://m2af-abcde.streamlit.app/)** (서비스 기간: ~24.04.02)
 - 발표 영상: [youtube](https://youtu.be/r7ngZ25C5qg)
-- 더 많은 정보: [report.pdf]()
+- 더 많은 정보: [report.pdf](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/report.pdf)
 ## Quick Start
-각 폴더의`README` 파일을 참하세요. 
-- streamlit: [streamlit/readme.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/streamlit/readme.md)
+각 폴더의`README` 파일을 참하세요.
+- data: [data/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/data/README.md)
+- streamlit: [streamlit/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/streamlit/README.md)
 - models
   - chat: [models/chat/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/models/chat/README.md)
   - emotion classifier: [models/classifier/README.md](https://github.com/boostcampaitech6/level2-3-nlp-finalproject-nlp-09/blob/develop/models/classifier/README.md)
