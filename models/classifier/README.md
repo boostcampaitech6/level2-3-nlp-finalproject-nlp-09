@@ -7,6 +7,11 @@
 ```python
 pip install -r requirements.txt
 ```
+## Run FastAPI for Deploy
+```python
+python ./app/main.py
+'''
+
 
 ## Model Info
 ### emotion classifier model
@@ -43,3 +48,12 @@ print(num_to_detail[label])
 - Training Dataset : [m2af/ko-emotion-dataset](https://huggingface.co/datasets/m2af/ko-emotion-dataset)
 - Active learning Dataset: [감성 대화 말뭉치](https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=86)
 
+## Training
+```python
+python ./modeling/train.py
+```
+
+## Inference
+```python
+python ./modeling/inference.py
+```
